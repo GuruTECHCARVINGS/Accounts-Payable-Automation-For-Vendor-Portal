@@ -1,0 +1,286 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accounts Payable Automation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+  <style>
+    /* Custom scrollbar for sidebar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(106, 27, 154, 0.4);
+      border-radius: 3px;
+    }
+  </style>
+  <script>
+    // Tailwind config for custom colors
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primaryPurple: {
+              DEFAULT: '#7B1FA2',
+              dark: '#6A1B9A',
+              light: '#8E24AA',
+            },
+            bgGray: {
+              DEFAULT: '#F9FAFB',
+              light: '#FAFAFA',
+              lighter: '#F5F5F5',
+            },
+            textDarkGray: {
+              DEFAULT: '#212121',
+              medium: '#333333',
+            },
+            borderGray: {
+              DEFAULT: '#E0E0E0',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-bgGray-lighter min-h-screen font-sans">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <nav class="bg-primaryPurple-dark w-56 flex flex-col p-4 space-y-2 rounded-tr-lg rounded-br-lg">
+      <a href="#" data-tab="dashboard" class="sidebar-btn flex items-center space-x-3 px-3 py-2 rounded-lg bg-primaryPurple-light text-white font-semibold cursor-pointer">
+        <i class="fas fa-bars text-lg"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" data-tab="invoices" class="sidebar-btn flex items-center space-x-3 px-3 py-2 rounded-lg bg-primaryPurple-light text-white font-semibold cursor-pointer">
+        <i class="fas fa-file-alt text-lg"></i>
+        <span>Invoices</span>
+      </a>
+      <a href="#" data-tab="payments" class="sidebar-btn flex items-center space-x-3 px-3 py-2 rounded-lg bg-primaryPurple-light text-white font-semibold cursor-pointer">
+        <i class="fas fa-dollar-sign text-lg"></i>
+        <span>Payments</span>
+      </a>
+      <a href="#" data-tab="reports" class="sidebar-btn flex items-center space-x-3 px-3 py-2 rounded-lg bg-primaryPurple-light text-white font-semibold cursor-pointer">
+        <i class="fas fa-chart-bar text-lg"></i>
+        <span>Reports</span>
+      </a>
+      <a href="#" data-tab="settings" class="sidebar-btn flex items-center space-x-3 px-3 py-2 rounded-lg bg-primaryPurple-light text-white font-semibold cursor-pointer">
+        <i class="fas fa-cog text-lg"></i>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <!-- Main content -->
+    <main class="flex-1 p-6">
+      <h1 id="page-title" class="text-textDarkGray-medium text-xl font-semibold mb-4">Accounts Payable Automation</h1>
+      <div id="content-area" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Content will be injected here -->
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const data = {
+      dashboard: {
+        title: "Accounts Payable Automation",
+        tiles: [
+          { id: "invoicesProcessed", title: "Invoices Processed", value: 485 },
+          { id: "overdueInvoices", title: "Overdue Invoices", value: 14 },
+          { id: "notProcessed", title: "Not Processed (Manual Intervention)", value: 9 },
+          { id: "totalAmountPaid", title: "Total Amount Paid", value: "$2,350,000" },
+          { 
+            id: "pendingApproval",
+            title: "Pending Approval", 
+            value: 22,
+            chart: {
+              labels: ["Jan", "Feb", "Apr", "Jun"],
+              heights: [20, 24, 26, 28]
+            }
+          },
+          { 
+            id: "totalAmountPaidChart",
+            title: "Total Amount Paid", 
+            chart: {
+              labels: ["Jan", "Feb", "Mar", "Apr", "Jun"],
+              heights: [18, 20, 22, 26, 30]
+            }
+          }
+        ]
+      },
+      invoices: {
+        title: "Invoices Overview",
+        tiles: [
+          { id: "invoicesProcessed", title: "Invoices Processed", value: 320 },
+          { id: "overdueInvoices", title: "Overdue Invoices", value: 8 },
+          { id: "notProcessed", title: "Not Processed (Manual Intervention)", value: 5 },
+          { id: "totalAmountPaid", title: "Total Amount Paid", value: "$1,250,000" },
+          { 
+            id: "pendingApproval",
+            title: "Pending Approval", 
+            value: 15,
+            chart: {
+              labels: ["Jan", "Feb", "Apr", "Jun"],
+              heights: [16, 20, 22, 24]
+            }
+          },
+          { 
+            id: "totalAmountPaidChart",
+            title: "Total Amount Paid", 
+            chart: {
+              labels: ["Jan", "Feb", "Mar", "Apr", "Jun"],
+              heights: [14, 16, 18, 20, 24]
+            }
+          }
+        ]
+      },
+      payments: {
+        title: "Payments Overview",
+        tiles: [
+          { id: "paymentsProcessed", title: "Payments Processed", value: 150 },
+          { id: "pendingPayments", title: "Pending Payments", value: 12 },
+          { id: "failedPayments", title: "Failed Payments", value: 3 },
+          { id: "totalPaidAmount", title: "Total Paid Amount", value: "$1,000,000" }
+        ]
+      },
+      reports: {
+        title: "Reports",
+        tiles: [
+          { id: "monthlyReports", title: "Monthly Reports", value: 12 },
+          { id: "quarterlyReports", title: "Quarterly Reports", value: 4 },
+          { id: "annualReports", title: "Annual Reports", value: 1 }
+        ]
+      },
+      settings: {
+        title: "Settings",
+        tiles: [
+          { id: "userSettings", title: "User Settings", value: "" },
+          { id: "systemSettings", title: "System Settings", value: "" }
+        ]
+      }
+    };
+
+    const contentArea = document.getElementById("content-area");
+    const pageTitle = document.getElementById("page-title");
+    const sidebarButtons = document.querySelectorAll(".sidebar-btn");
+
+    function createTile(tile) {
+      const tileDiv = document.createElement("div");
+      tileDiv.className = "bg-white border border-borderGray rounded-lg p-5 shadow-sm cursor-pointer";
+      tileDiv.setAttribute("data-id", tile.id || "");
+
+      const title = document.createElement("h2");
+      title.className = "text-textDarkGray font-semibold mb-1";
+      title.textContent = tile.title;
+      tileDiv.appendChild(title);
+
+      if (tile.value !== undefined && tile.value !== "") {
+        const value = document.createElement("p");
+        value.className = "text-4xl font-extrabold text-textDarkGray leading-none";
+        value.textContent = tile.value;
+        tileDiv.appendChild(value);
+      }
+
+      if (tile.chart) {
+        const chartContainer = document.createElement("div");
+        chartContainer.className = "mt-3";
+
+        const barsContainer = document.createElement("div");
+        barsContainer.className = "flex items-end justify-between space-x-3";
+
+        tile.chart.heights.forEach((height) => {
+          const bar = document.createElement("div");
+          bar.className = "bg-primaryPurple-light rounded-md w-6";
+          bar.style.height = height + "px";
+          barsContainer.appendChild(bar);
+        });
+
+        chartContainer.appendChild(barsContainer);
+
+        const labelsContainer = document.createElement("div");
+        labelsContainer.className = "flex justify-between text-xs text-primaryPurple-dark mt-1 px-0.5";
+
+        tile.chart.labels.forEach((label) => {
+          const labelSpan = document.createElement("span");
+          labelSpan.textContent = label;
+          labelsContainer.appendChild(labelSpan);
+        });
+
+        chartContainer.appendChild(labelsContainer);
+        tileDiv.appendChild(chartContainer);
+      }
+
+      // Add click event for tiles with numeric values to increment on click
+      if (typeof tile.value === "number") {
+        tileDiv.addEventListener("click", () => {
+          tile.value++;
+          // Update displayed value
+          value.textContent = tile.value;
+        });
+      }
+
+      return tileDiv;
+    }
+
+    function renderContent(tab) {
+      contentArea.innerHTML = "";
+      pageTitle.textContent = data[tab].title;
+
+      if (tab === "dashboard" || tab === "invoices") {
+        // For these tabs, show tiles in 2 columns left and 1 column right
+        const leftContainer = document.createElement("div");
+        leftContainer.className = "space-y-4 md:col-span-2";
+
+        const rightContainer = document.createElement("div");
+        rightContainer.className = "space-y-4";
+
+        // Left tiles: all tiles with value (except those with chart only)
+        data[tab].tiles.forEach((tile) => {
+          if (tile.value !== undefined && !tile.chart) {
+            leftContainer.appendChild(createTile(tile));
+          }
+        });
+
+        // Right tiles: tiles with charts or with value + chart
+        data[tab].tiles.forEach((tile) => {
+          if (tile.chart) {
+            rightContainer.appendChild(createTile(tile));
+          }
+        });
+
+        contentArea.appendChild(leftContainer);
+        contentArea.appendChild(rightContainer);
+      } else {
+        // For other tabs, show all tiles in single column grid
+        data[tab].tiles.forEach((tile) => {
+          contentArea.appendChild(createTile(tile));
+        });
+      }
+    }
+
+    // Initial render
+    renderContent("dashboard");
+
+    // Sidebar button click handler
+    sidebarButtons.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        const selectedTab = btn.getAttribute("data-tab");
+
+        // Reset all buttons styles
+        sidebarButtons.forEach((b) => {
+          b.classList.remove("bg-primaryPurple-light", "text-white", "font-semibold");
+          b.classList.add("bg-primaryPurple-light", "text-white", "font-semibold");
+        });
+
+        // Highlight selected button
+        btn.classList.add("bg-primaryPurple-light", "text-white", "font-semibold");
+
+        renderContent(selectedTab);
+      });
+    });
+  </script>
+</body>
+</html>
